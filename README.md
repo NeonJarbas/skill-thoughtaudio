@@ -6,7 +6,6 @@ Thought Audio skill for OCP
 
 search http://thoughtaudio.com by voice!
 
-![](./gui.png)
 ![](./gui2.png)
 
 ## Examples
