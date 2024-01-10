@@ -1,18 +1,19 @@
 from os.path import join, dirname
 
 from audiobooker.scrappers.thoughtaudio import ThoughtAudio
-from ovos_plugin_common_play.ocp import MediaType, PlaybackType
+
+from ovos_utils.ocp import MediaType, PlaybackType
 from ovos_utils.parse import fuzzy_match, MatchStrategy
-from ovos_workshop.skills.common_play import OVOSCommonPlaybackSkill, \
-    ocp_search
+from ovos_workshop.decorators.ocp import ocp_search
+from ovos_workshop.skills.common_play import OVOSCommonPlaybackSkill
 
 
 class ThoughtAudioSkill(OVOSCommonPlaybackSkill):
-    def __init__(self):
-        super(ThoughtAudioSkill, self).__init__("ThoughtAudio")
-        self.supported_media = [MediaType.GENERIC, MediaType.AUDIOBOOK]
+    def __init__(self, *args, **kwargs):
+        self.supported_media = [MediaType.AUDIOBOOK]
         self.skill_icon = join(dirname(__file__), "ui", "logo.gif")
         self.skill_bg = join(dirname(__file__), "ui", "bg.png")
+        super().__init__(*args, **kwargs)
 
     def calc_score(self, phrase, match, idx=0, base_score=0):
         # idx represents the order from search
@@ -52,7 +53,7 @@ class ThoughtAudioSkill(OVOSCommonPlaybackSkill):
 
     def _book2ocp(self, book, score):
         author = " ".join([au.first_name + au.last_name for au in
-                            book.authors])
+                           book.authors])
         pl = [{
             "match_confidence": score,
             "media_type": MediaType.AUDIOBOOK,
@@ -80,6 +81,3 @@ class ThoughtAudioSkill(OVOSCommonPlaybackSkill):
             "skill_id": self.skill_id
         }
 
-
-def create_skill():
-    return ThoughtAudioSkill()
